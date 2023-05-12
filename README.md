@@ -27,6 +27,12 @@ APP_EMAIL_SMTP_USER=<SMTP username>
 APP_EMAIL_SMTP_PASSWORD=<SMTP password>
 ```
 
+### Updating
+1. Pull the latest version
+2. Run `docker compose up -d --build`
+
+The migrations will automatically run to keep the database up to date.
+
 ## Development
 You can run optiboy locally in your favorite IDE. To test the email sending, you need to procure your own SMTP service and configure the environment.
 Please refer to [config.ts](src/util/config.ts) for the required environment variables.
