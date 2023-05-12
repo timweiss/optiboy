@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import config from './util/config';
 import {confirmEmail, submitEmail} from './service';
 import {emailConfirmationErrorHtml, emailConfirmedHtml} from './html';
@@ -15,6 +16,7 @@ httpServer.listen(config.port, () => {
 });
 
 app.use(express.json());
+app.use(cors({ origin: '*' }));
 
 const shutdown = async () => {
   console.log('Shutting down');
@@ -35,10 +37,10 @@ app.post('/', async (req, res) => {
   try {
     const result = await submitEmail(email, referrer);
     console.log('email submitted: ' + email);
-    res.status(200).send();
+    res.status(200).send({});
   } catch (error) {
     console.error(error);
-    res.status(400).send();
+    res.status(400).send({});
   }
 });
 
