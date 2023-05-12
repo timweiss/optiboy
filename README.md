@@ -9,6 +9,7 @@ Most of them reside in countries with potentially unsafe transfers. Still, a dou
 * Collect email addresses via one endpoint
 * Opt-in mail is sent to email
 * Simple confirmation page
+* Notification mail (optional)
 
 ## Requirements
 * Docker (Compose) on machine
