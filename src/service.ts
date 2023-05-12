@@ -2,6 +2,8 @@ import ksuid from 'ksuid';
 import nodemailer from 'nodemailer';
 import {createEntry, EmailEntry, getEntryForConfirmationKey, getEntryForEmail, updateEntry} from './db';
 import config from './util/config';
+import {sendMail} from './util/email';
+import {emailNotification} from './html';
 
 export const submitEmail = async (email: string, referrer: string) => {
   // check if the email already exists, do nothing then
@@ -35,23 +37,14 @@ export const confirmEmail = async (confirmationKey: string) => {
 
   await updateEntry(entry);
 
+  await sendNotificationMail(entry.email, entry.source!);
+
   return entry;
 };
 
 
-
 const sendConfirmationMail = async (email: string, confirmationKey: string) => {
   const url = `${config.hostname}/confirm/${confirmationKey}`;
-
-  const transporter = nodemailer.createTransport({
-    host: config.email.smtp.host,
-    port: config.email.smtp.port,
-    auth: {
-      user: config.email.smtp.user,
-      pass: config.email.smtp.password
-    }
-  });
-
   const html = `
     <style>
      h1 {
@@ -63,13 +56,12 @@ const sendConfirmationMail = async (email: string, confirmationKey: string) => {
     <p>If you cannot click this link, you can copy and paste <pre>${url}</pre> into your browser.</p>
   `;
 
-  await transporter.sendMail({
-    from: {
-      name: config.email.sender.name,
-      address: config.email.sender.email
-    },
-    to: email,
-    subject: 'Confirm your email address',
-    html
-  });
+  await sendMail(email, 'Please confirm your email', html);
+};
+
+const sendNotificationMail = async (email: string, source: string) => {
+  if (!config.email.notificationRecipient) { return }
+
+  const html = emailNotification(email, source);
+  await sendMail(config.email.notificationRecipient, 'New Email Signed Up', html);
 };

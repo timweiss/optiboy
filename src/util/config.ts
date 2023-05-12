@@ -5,6 +5,7 @@ const config = {
     connectionString: process.env.APP_DB_CONNECTION || 'postgres://optiboy:optiboy@localhost:5432/optiboy'
   },
   email: {
+    notificationRecipient: process.env.APP_EMAIL_NOTIFICATION_RECIPIENT || null,
     sender: {
       name: process.env.APP_EMAIL_SENDER_NAME || 'optiboy',
       email: process.env.APP_EMAIL_SENDER || 'yourmail@example.com',
