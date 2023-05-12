@@ -25,6 +25,20 @@ APP_EMAIL_SENDER=<your email address>
 APP_EMAIL_SMTP_HOST=<SMTP host>
 APP_EMAIL_SMTP_USER=<SMTP username>
 APP_EMAIL_SMTP_PASSWORD=<SMTP password>
+APP_HOSTNAME=<your hostname>
+```
+
+You'll need to set up a reverse proxy like nginx on your server. The following configuration is an example for nginx:
+```
+server {
+	# replace example.com with your domain name
+	server_name example.com;
+
+	location / {
+		proxy_pass http://127.0.0.1:3000;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+}
 ```
 
 ### Updating
