@@ -41,7 +41,7 @@ export const getEntryForConfirmationKey = async (confirmationKey: string): Promi
 };
 
 export const updateEntry = async (entry: EmailEntry) => {
-  await pool.query('UPDATE entries SET confirmed = ($1), confirmation_key = ($2), updated_at = ($3) WHERE id = ($3)', [entry.confirmed, entry.confirmationKey, entry.updatedAt, entry.id]);
+  await pool.query('UPDATE entries SET confirmed = ($1), confirmation_key = ($2), updated_at = ($3) WHERE id = ($3)', [entry.confirmed, entry.confirmationKey, entry.updatedAt.toISOString(), entry.id]);
 };
 
 export const createEntry = async (entry: Partial<EmailEntry>) => {
