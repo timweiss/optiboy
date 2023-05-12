@@ -24,6 +24,5 @@ services:
       - .env
     environment:
       - APP_DB_CONNECTION=postgres://postgres:postgres@postgres:5432/postgres
-      - APP_HOSTNAME=http://localhost:3000
     depends_on:
       - postgres
