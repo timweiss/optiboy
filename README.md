@@ -97,3 +97,15 @@ npm run build
 ```shell
 npm run start
 ```
+
+## Customizing the confirmation mail
+You can provide a custom template for the confirmation mail. [The template](src/templates/confirm-email.mjml) is written with [MJML](https://mjml.io/) and templated using [Nunjucks](https://mozilla.github.io/nunjucks/).
+If you want to replace the template running within Docker, be sure to mount it by customizing the [`docker-compose`](docker-compose.yml) file. Currently, only the `confirmationUrl` is injected into the template.
+
+```yaml
+# ...
+      app:
+        # ...
+        volumes:
+        - ./src/templates/confirm-email.mjml:/home/node/app/src/templates/confirm-email.mjml
+```
