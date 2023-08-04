@@ -26,7 +26,7 @@ export function useAdminRoutes() {
             res.send(entry);
         } catch (e: any) {
             if (e instanceof NotFoundError) {
-                res.status(404).send(e.message);
+                res.status(404).send('Email not found');
             } else {
                 res.status(500).send('Internal Server Error');
             }
