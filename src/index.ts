@@ -1,10 +1,11 @@
-import express from 'express';
+import express, {Router} from 'express';
 import cors from 'cors';
 import config from './util/config';
 import {confirmEmail, submitEmail} from './service';
 import {emailConfirmationErrorHtml, emailConfirmedHtml} from './html';
 import pool from './util/pool';
 import {createServer} from 'http';
+import {useAdminRoutes} from "./admin";
 
 console.log('optiboy is starting up');
 
@@ -26,33 +27,41 @@ const shutdown = async () => {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
-app.get('/', (req, res) => {
-  res.send('hello from optiboy!');
-});
+app.use('/', useAppRoutes());
+app.use('/admin', useAdminRoutes());
 
-app.post('/', async (req, res) => {
-  const referrer = req.get('Referrer') || '';
-  const email = req.body.email;
+function useAppRoutes() {
+  const router = express.Router();
+  router.get('/', (req, res) => {
+    res.send('hello from optiboy!');
+  });
 
-  try {
-    const result = await submitEmail(email, referrer);
-    console.log('email submitted: ' + email);
-    res.status(200).send({});
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({});
-  }
-});
+  router.post('/', async (req, res) => {
+    const referrer = req.get('Referrer') || '';
+    const email = req.body.email;
 
-app.get('/confirm/:key', async (req, res) => {
-  try {
-    const entry = await confirmEmail(req.params.key);
-    console.log('email confirmed: ' + entry.email);
-    res.setHeader("Content-Type", "text/html");
-    res.status(200).send(emailConfirmedHtml());
-  } catch (error) {
-    console.error(error);
-    res.setHeader("Content-Type", "text/html");
-    res.status(404).send(emailConfirmationErrorHtml());
-  }
-});
+    try {
+      const result = await submitEmail(email, referrer);
+      console.log('email submitted: ' + email);
+      res.status(200).send({});
+    } catch (error) {
+      console.error(error);
+      res.status(400).send({});
+    }
+  });
+
+  router.get('/confirm/:key', async (req, res) => {
+    try {
+      const entry = await confirmEmail(req.params.key);
+      console.log('email confirmed: ' + entry.email);
+      res.setHeader("Content-Type", "text/html");
+      res.status(200).send(emailConfirmedHtml());
+    } catch (error) {
+      console.error(error);
+      res.setHeader("Content-Type", "text/html");
+      res.status(404).send(emailConfirmationErrorHtml());
+    }
+  });
+
+  return router;
+}

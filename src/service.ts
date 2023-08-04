@@ -1,9 +1,16 @@
 import ksuid from 'ksuid';
-import nodemailer from 'nodemailer';
-import {createEntry, EmailEntry, getEntryForConfirmationKey, getEntryForEmail, updateEntry} from './db';
+import {
+  createEntry,
+  EmailEntry,
+  getAllConfirmedEntries,
+  getEntryForConfirmationKey,
+  getEntryForEmail,
+  updateEntry
+} from './db';
 import config from './util/config';
 import {sendMail} from './util/email';
 import {emailNotification} from './html';
+import {NotFoundError} from "./util/errors";
 
 export const submitEmail = async (email: string, referrer: string) => {
   // check if the email already exists, do nothing then
@@ -42,6 +49,27 @@ export const confirmEmail = async (confirmationKey: string) => {
   return entry;
 };
 
+export const confirmedEntries = async () => {
+  return getAllConfirmedEntries().then(e => e.map(e => {
+    return {
+      email: e.email,
+      source: e.source,
+      createdAt: e.createdAt
+    }
+  }));
+};
+
+export const checkEntry = async (email: string) => {
+  const entry = await getEntryForEmail(email);
+  if (!entry) {
+    throw new NotFoundError(email);
+  }
+  return {
+    email: entry.email,
+    source: entry.source,
+    createdAt: entry.createdAt
+  };
+};
 
 const sendConfirmationMail = async (email: string, confirmationKey: string) => {
   const url = `${config.hostname}/confirm/${confirmationKey}`;

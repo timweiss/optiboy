@@ -15,6 +15,17 @@ Most of them reside in countries with potentially unsafe transfers. Still, a dou
 * Docker (Compose) on machine
 * Any SMTP server or service
 
+## Usage
+### Collecting email addresses
+Send a POST request to `/` with the following JSON body:
+```json
+{
+  "email": "youremail@example.com"
+}
+```
+
+This email will receive an email with the prompt to validate the subscription.
+
 ## Deployment
 1. Clone this repository
 2. Configure your own environment variables in `.env`

@@ -48,3 +48,8 @@ export const createEntry = async (entry: Partial<EmailEntry>) => {
   const result = await pool.query('INSERT INTO entries (email, source, confirmation_key) VALUES ($1, $2, $3) RETURNING *', [entry.email, entry.source, entry.confirmationKey]);
   return rowToEntry(result.rows[0]);
 };
+
+export const getAllConfirmedEntries = async () => {
+  const result = await pool.query('SELECT * FROM entries WHERE confirmed = true');
+  return result.rows.map(rowToEntry);
+};

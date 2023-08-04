@@ -16,6 +16,10 @@ const config = {
       user: process.env.APP_EMAIL_SMTP_USER,
       password: process.env.APP_EMAIL_SMTP_PASSWORD
     }
+  },
+  admin: {
+    enabled: process.env.APP_ADMIN_ENABLE === 'true' || false,
+    secret: process.env.APP_ADMIN_SECRET || 'change-this-secret'
   }
 };
 
