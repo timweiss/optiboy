@@ -17,14 +17,39 @@ Most of them reside in countries with potentially unsafe transfers. Still, a dou
 
 ## Usage
 ### Collecting email addresses
-Send a POST request to `/` with the following JSON body:
+Send a `POST` request to `/` with the following JSON body:
 ```json
 {
   "email": "youremail@example.com"
 }
 ```
-
 This email will receive an email with the prompt to validate the subscription.
+
+### Admin endpoints
+In order to enable the admin routes, `APP_ADMIN_ENABLE` must be set to `true` in the environment. `APP_ADMIN_SECRET` also needs to be set.
+All requests to the admin endpoints need the `Authorization` header to be set to `Bearer <APP_ADMIN_SECRET>`, replace `<APP_ADMIN_SECRET>` with your own secret.
+
+#### Fetching all confirmed email addresses
+Send a `GET` request to `/admin`, the API with a JSON array of the following structure:
+```json
+[
+  {
+    "email": "youremail@example.com",
+    "source": "https://example.com",
+    "createdAt": "2023-01-01T00:00:00.000Z"
+  }
+]
+```
+
+#### Checking if an email address is confirmed
+Send a `GET` request to `/admin/youremail@example.com` to check if the email address is confirmed. If it does not exist or is not confirmed, a `404` is returned. Otherwise, a `200` is returned with the following JSON body:
+```json
+{
+  "email": "youremail@example.com",
+  "source": "https://example.com",
+  "createdAt": "2023-01-01T00:00:00.000Z"
+}
+```
 
 ## Deployment
 1. Clone this repository

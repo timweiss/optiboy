@@ -28,7 +28,10 @@ process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
 app.use('/', useAppRoutes());
-app.use('/admin', useAdminRoutes());
+
+if (config.admin.enabled && config.admin.secret) {
+  app.use('/admin', useAdminRoutes());
+}
 
 function useAppRoutes() {
   const router = express.Router();
