@@ -1,3 +1,7 @@
+import mjml2html from 'mjml';
+import nunjucks from 'nunjucks';
+import * as fs from 'fs/promises';
+
 const pageFrame = (body: string) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -29,3 +33,13 @@ export const emailNotification = (email: string, source: string) => pageFrame(`
 <p>Email: ${email}</p>
 <p>Source: ${source}</p>
 `);
+
+export const confirmationEmail = async (verificationUrl: string) => {
+  const template = await fs.readFile('./src/templates/confirm-email.mjml', 'utf-8');
+  const rendered = nunjucks.renderString(template, { verificationUrl });
+  const { html } = mjml2html(rendered, {
+    // don't import fonts from Google we don't need anyway
+    fonts: {}
+  });
+  return html;
+};

@@ -1,0 +1,19 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all line-height="1.2"></mj-all>
+            <mj-all font-family="system-ui" />
+        </mj-attributes>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h1>Please confirm your email</h1>
+                </mj-text>
+                <mj-text>Click below to verify your subscription. Or paste the following link into your browser: <a href="{{verificationUrl}}">{{verificationUrl}}</a></mj-text>
+                <mj-button align="left" href="{{verificationUrl}}">Confirm email</mj-button>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

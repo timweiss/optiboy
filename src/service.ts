@@ -9,7 +9,7 @@ import {
 } from './db';
 import config from './util/config';
 import {sendMail} from './util/email';
-import {emailNotification} from './html';
+import {confirmationEmail, emailNotification} from './html';
 import {NotFoundError} from "./util/errors";
 
 export const submitEmail = async (email: string, referrer: string) => {
@@ -73,16 +73,7 @@ export const checkEntry = async (email: string) => {
 
 const sendConfirmationMail = async (email: string, confirmationKey: string) => {
   const url = `${config.hostname}/confirm/${confirmationKey}`;
-  const html = `
-    <style>
-     h1 {
-        font-size: 1.5rem;
-     }
-    </style>
-    <h1>Please confirm your email</h1>
-    <p>Click <a href="${url}">here</a> to confirm your email address.</p>
-    <p>If you cannot click this link, you can copy and paste <pre>${url}</pre> into your browser.</p>
-  `;
+  const html = await confirmationEmail(url);
 
   await sendMail(email, 'Please confirm your email', html);
 };
