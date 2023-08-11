@@ -51,6 +51,15 @@ Send a `GET` request to `/admin/youremail@example.com` to check if the email add
 }
 ```
 
+#### Manually creating/confirming an email address (upsert)
+Send a `POST` request to `/admin/youremail@example.com` with the following JSON body:
+```json
+{
+  "source": "example.com"
+}
+```
+If the email was already registered, it will be confirmed and the source will be updated if it was not set before. If the email was not registered, it will be created and confirmed. No emails will be sent.
+
 ## Deployment
 1. Clone this repository
 2. Configure your own environment variables in `.env`

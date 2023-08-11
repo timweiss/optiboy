@@ -49,6 +49,29 @@ export const confirmEmail = async (confirmationKey: string) => {
   return entry;
 };
 
+export const upsertConfirmedEntry = async (email: string, source: string) => {
+  const existing = await getEntryForEmail(email);
+  if (existing) {
+    existing.source = existing.source || source;
+    existing.updatedAt = new Date();
+    existing.confirmed = true;
+    return updateEntry(existing);
+  }
+
+  const entry: Partial<EmailEntry> = {
+    email,
+    source,
+    confirmed: true,
+    confirmationKey: null,
+  };
+
+  const created = await createEntry(entry);
+  entry.id = created.id;
+  entry.updatedAt = new Date();
+
+  return updateEntry(entry as EmailEntry);
+};
+
 export const confirmedEntries = async () => {
   return getAllConfirmedEntries().then(e => e.map(e => {
     return {
